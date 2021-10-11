@@ -10,17 +10,17 @@ namespace ListPractise.Collections
 {
     public class PhoneBook<T> : IPhoneBook<T> where T : IContact, IComparable
     {
-        private Dictionary<CultureInfo, SortedLinkedList<T>> _culturedCollections;
-        private Dictionary<CharType, SortedLinkedList<T>> _specialCollections;
+        private Dictionary<CultureInfo, ICollection<T>> _culturedCollections;
+        private Dictionary<CharType, ICollection<T>> _specialCollections;
         private CultureResolver _cultureResolver;
 
         public PhoneBook()
         {
             _cultureResolver = new CultureResolver();
-            _culturedCollections = new Dictionary<CultureInfo, SortedLinkedList<T>>();
+            _culturedCollections = new Dictionary<CultureInfo, ICollection<T>>();
             _culturedCollections.Add(CultureInfo.GetCultureInfo("ru-RU"), new SortedLinkedList<T>());
             _culturedCollections.Add(CultureInfo.GetCultureInfo("en-GB"), new SortedLinkedList<T>());
-            _specialCollections = new Dictionary<CharType, SortedLinkedList<T>>();
+            _specialCollections = new Dictionary<CharType, ICollection<T>>();
             _specialCollections.Add(CharType.Number, new SortedLinkedList<T>());
             _specialCollections.Add(CharType.Special, new SortedLinkedList<T>());
         }
@@ -31,11 +31,11 @@ namespace ListPractise.Collections
                 throw new ArgumentException("Name is null or empty");
             }
 
-            var collection = DetermineCollection(contact.Name);
+            var collection = DetermineCollection(contact.Name) as SortedLinkedList<T>;
             collection.AddSorted(contact);
         }
 
-        public SortedLinkedList<T> DetermineCollection(string name)
+        public ICollection<T> DetermineCollection(string name)
         {
             var cultureInfo = _cultureResolver.GetCultureInfo(name);
 
