@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using ListPractise.Collections;
+using ListPractise.Collections.Abstractions;
+using ListPractise.Models;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ListPractise
 {
@@ -6,8 +9,13 @@ namespace ListPractise
     {
         static void Main(string[] args)
         {
-            Starter start = new Starter();
-            start.Run();
+            var serviceProvider = new ServiceCollection()
+                .AddTransient<ICultureResolver, CultureResolver>()
+                .AddTransient<IPhoneBook<Contact>, PhoneBook<Contact>>()
+                .AddTransient<Starter>()
+                .BuildServiceProvider();
+            var starter = serviceProvider.GetService<Starter>();
+            starter.Run();
         }
     }
 }
